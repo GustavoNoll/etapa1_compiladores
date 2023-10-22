@@ -1,10 +1,13 @@
 %{ 
     #include "tokens.h"
-    int num_linhas = 1;
+    int profundidade_do_comentario = 0;
+    int numero_de_linhas = 0;
 
 
 %}
+
 %option noyywrap
+%x comentario
 
 %%
 
@@ -40,6 +43,15 @@
 ";"  { return (int) ';'; }
 
 "/"{2,}(.)*\n {printf("Comentario de linha\n\n");}
+"/*" {profundidade_do_comentario += 1; BEGIN(comentario);}
+<comentario>"/*" {profundidade_do_comentario += 1;}
+<comentario>"*/" {profundidade_do_comentario -= 1;  
+    if(profundidade_do_comentario == 0) {
+        BEGIN(INITIAL);
+    }
+}
+<comentario>\n {numero_de_linhas += 1;}
+<comentario>. {}
 
 true {return TK_LIT_TRUE;}
 false {return TK_LIT_FALSE;}
