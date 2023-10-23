@@ -1,6 +1,7 @@
 %{ 
     #include "tokens.h"
     #include "functions.h"
+    int profundidade_comentario = 0;
 %}
 
 %option yylineno
@@ -10,7 +11,7 @@ identificador [a-z_][a-z_0-9]*
 
 literal_inteiro [0-9]
 literal_float [0-9]*\.[0-9]+
-operacoes +-%=;*
+operacoes +|-|/|*|=|%|;
 pos_inteiro [0-9]+[\n {operacoes}]
  
 %x comentario
@@ -68,11 +69,15 @@ false {return TK_LIT_FALSE;}
 
 "/*" {
     BEGIN(comentario);
+    profundidade_comentario = 1;
 }
 <comentario>
 {
-    "*/" { BEGIN(INITIAL);}
-    \n { increment_line_number();}
+    "/*" {profundidade_comentario++;}
+    "*/" {profundidade_comentario--; if (profundidade_comentario == 0)
+        { BEGIN(INITIAL);}
+    }
+    \n {increment_line_number();}
     . {} /* ignore */
 }
 [ \t]  ;  // Ignorar espaços e tabulações
