@@ -9,7 +9,7 @@
 identificador [a-z_][a-z_0-9]*
 
 literal_inteiro [0-9]
-literal_float ([0-9]+"."[0-9]*)|([0-9]*\.[0-9]+)
+literal_float [0-9]*\.[0-9]+
 operacoes +-%=;*
 pos_inteiro [0-9]+[\n {operacoes}]
  
