@@ -5,6 +5,7 @@ Este arquivo será posteriormente substituído.
 #include <stdio.h>
 #define _(s) #s // https://gcc.gnu.org/onlinedocs/gcc-12.2.0/cpp/Stringizing.html
 #include "tokens.h"
+#include "functions.h"
 #define RET_SUCESSO 0
 #define RET_TKNERRO 1
 #define RET_DESCONH 2

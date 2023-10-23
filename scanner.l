@@ -1,13 +1,20 @@
 %{ 
     #include "tokens.h"
-    int profundidade_do_comentario = 0;
-    int numero_de_linhas = 0;
-
-
+    #include "functions.h"
 %}
 
+%option yylineno
 %option noyywrap
+
+identificador [a-z_][a-z_0-9]*
+
+literal_inteiro [0-9]
+literal_float ([0-9]+"."[0-9]*)|([0-9]*\.[0-9]+)
+operacoes +-%=;*
+pos_inteiro [0-9]+[\n {operacoes}]
+ 
 %x comentario
+
 
 %%
 
@@ -42,24 +49,32 @@
 ","  { return (int) ','; }
 ";"  { return (int) ';'; }
 
-"/"{2,}(.)*\n {printf("Comentario de linha\n\n");}
-"/*" {profundidade_do_comentario += 1; BEGIN(comentario);}
-<comentario>"/*" {profundidade_do_comentario += 1;}
-<comentario>"*/" {profundidade_do_comentario -= 1;  
-    if(profundidade_do_comentario == 0) {
-        BEGIN(INITIAL);
-    }
-}
-<comentario>\n {numero_de_linhas += 1;}
-<comentario>. {}
 
 true {return TK_LIT_TRUE;}
 false {return TK_LIT_FALSE;}
 
-([0-9]+"."[0-9]*)|([0-9]*\.[0-9]+) {return TK_LIT_FLOAT;}
-[0-9]+ {return TK_LIT_INT;}
 
-[a-z_][a-zA-z_0-9]* {return TK_IDENTIFICADOR;}
+{identificador} { return TK_IDENTIFICADOR; }
+{literal_inteiro}+ { return TK_LIT_INT; }
 
-.* {return TK_ERRO;}
+
+{literal_float} {return TK_LIT_FLOAT;}
+
+\n  { increment_line_number(); }
+
+"//"(.)* {
+  /* Ignorar até o final da linha (comentário //) */
+}
+
+"/*" {
+    BEGIN(comentario);
+}
+<comentario>
+{
+    "*/" { BEGIN(INITIAL);}
+    \n { increment_line_number();}
+    . {} /* ignore */
+}
+[ \t]  ;  // Ignorar espaços e tabulações
+. {return TK_ERRO;}
 %%
