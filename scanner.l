@@ -1,7 +1,6 @@
 %{ 
     #include "tokens.h"
     #include "functions.h"
-    int profundidade_comentario = 0;
 %}
 
 %option yylineno
@@ -73,8 +72,8 @@ false {return TK_LIT_FALSE;}
 }
 <comentario>
 {
-    "/*" {profundidade_comentario++;}
-    "*/" {profundidade_comentario--; if (profundidade_comentario == 0)
+    "/*" {increment_deep_comment();}
+    "*/" {decrement_deep_comment(); if (get_deep_comment() == 0)
         { BEGIN(INITIAL);}
     }
     \n {increment_line_number();}
