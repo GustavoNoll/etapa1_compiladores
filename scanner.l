@@ -74,7 +74,9 @@ false {return TK_LIT_FALSE;}
 {
     "/*" {increment_deep_comment();}
     "*/" {decrement_deep_comment(); if (get_deep_comment() == 0)
-        { BEGIN(INITIAL);}
+        { 
+            BEGIN(INITIAL);
+        }
     }
     \n {increment_line_number();}
     . {} /* ignore */
