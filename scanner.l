@@ -3,15 +3,12 @@
     #include "functions.h"
 %}
 
-%option yylineno
 %option noyywrap
 
-identificador [a-z_][a-z_0-9]*
+identificador [a-z_][a-zA-Z_0-9]*
 
-literal_inteiro [0-9]
+literal_inteiro [0-9]+
 literal_float [0-9]*\.[0-9]+
-operacoes +|-|/|*|=|%|;
-pos_inteiro [0-9]+[\n {operacoes}]
  
 %x comentario
 
@@ -55,7 +52,7 @@ false {return TK_LIT_FALSE;}
 
 
 {identificador} { return TK_IDENTIFICADOR; }
-{literal_inteiro}+ { return TK_LIT_INT; }
+{literal_inteiro} { return TK_LIT_INT; }
 
 
 {literal_float} {return TK_LIT_FLOAT;}
@@ -81,6 +78,6 @@ false {return TK_LIT_FALSE;}
     \n {increment_line_number();}
     . {} /* ignore */
 }
-[ \t]  ;  // Ignorar espaços e tabulações
+([[:blank:]]|[[:space:]])+  { } // Ignorar espaços e tabulações
 . {return TK_ERRO;}
 %%
