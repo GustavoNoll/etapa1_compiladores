@@ -12,15 +12,3 @@ int get_line_number(void) {
 void increment_line_number(void) {
     line_number++;
 }
-
-int get_deep_comment(void) {
-    return deep_comment;
-}
-
-void increment_deep_comment(void) {
-    deep_comment++;
-}
-
-void decrement_deep_comment(void) {
-    deep_comment--;
-}

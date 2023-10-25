@@ -60,7 +60,7 @@ false {return TK_LIT_FALSE;}
 \n  { increment_line_number(); }
 
 "//".* {
-  /* Ignorar até o final da linha (comentário //) */
+  /* Ignoracomentário de linha */
 }
 
 "/*" {
@@ -69,14 +69,9 @@ false {return TK_LIT_FALSE;}
 }
 <comentario>
 {
-    "/*" {increment_deep_comment();}
-    "*/" {decrement_deep_comment(); if (get_deep_comment() == 0)
-        { 
-            BEGIN(INITIAL);
-        }
-    }
+    "*/" {BEGIN(INITIAL);}
     \n {increment_line_number();}
-    . {} /* ignore */
+    . {} /* Ignora comentário de bloco */
 }
 [ \t\r\n] { } // Ignorar espaços e tabulações
 . {return TK_ERRO;}
