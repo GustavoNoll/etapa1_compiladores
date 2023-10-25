@@ -59,7 +59,7 @@ false {return TK_LIT_FALSE;}
 
 \n  { increment_line_number(); }
 
-"//"(.)* {
+"//".* {
   /* Ignorar até o final da linha (comentário //) */
 }
 
@@ -78,6 +78,6 @@ false {return TK_LIT_FALSE;}
     \n {increment_line_number();}
     . {} /* ignore */
 }
-([[:blank:]]|[[:space:]])+  { } // Ignorar espaços e tabulações
+[ \t\r\n] { } // Ignorar espaços e tabulações
 . {return TK_ERRO;}
 %%
