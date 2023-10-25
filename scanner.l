@@ -65,7 +65,6 @@ false {return TK_LIT_FALSE;}
 
 "/*" {
     BEGIN(comentario);
-    increment_deep_comment();
 }
 <comentario>
 {
